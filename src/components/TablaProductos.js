@@ -1,9 +1,8 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import BotonEliminarProducto from "./BotonEliminarProducto.js";
-import BotonEditarProducto from "./BotonEditarProducto.js";
 
-const TablaProductos = ({ productos, eliminarProducto, cargarDatos }) => {
+const TablaProductos = ({ productos, eliminarProducto, editarProducto }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Tabla de Productos</Text>
@@ -23,9 +22,14 @@ const TablaProductos = ({ productos, eliminarProducto, cargarDatos }) => {
             <Text style={styles.celda}>C${item.precio}</Text>
             {/* Celda de acciones */}
             <View style={[styles.celdaAcciones]}>
-              <BotonEditarProducto id={item.id} nombreInicial={item.nombre} precioInicial={item.precio} cargarDatos={cargarDatos}  />
-              <BotonEliminarProducto id={item.id} eliminarProducto={eliminarProducto} />
-            </View>
+              <TouchableOpacity
+                      style={styles.botonActualizar}
+                      onPress={() => editarProducto(item)}
+                    >
+                      <Text>✏️</Text>
+                    </TouchableOpacity>
+                    <BotonEliminarProducto id={item.id} eliminarProducto={eliminarProducto} />
+                  </View>
           </View>
         ))}
       </ScrollView>
@@ -77,6 +81,15 @@ const styles = StyleSheet.create({
     fontSize: 17,
     textAlign: "center",
   },
+
+    botonActualizar: {
+    padding: 4,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: 'center',
+    alignSelf: 'center',
+    backgroundColor: '#99c99aff'
+  }
 });
 
 export default TablaProductos;

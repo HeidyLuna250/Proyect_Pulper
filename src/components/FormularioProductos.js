@@ -4,18 +4,24 @@ import { View, TextInput, Button, StyleSheet, Text, Alert } from "react-native";
 const FormularioProductos = ({ 
   nuevoProducto,
   manejoCambio,
-  guardarProducto
+  guardarProducto,
+  actualizarProducto,
+  modoEdicion
 }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Registro de Productos</Text>
+      <Text style={styles.titulo}>
+        {modoEdicion ? "Actualizar Producto" : "Registro de Producto"}
+      </Text>
+      
       <TextInput
         style={styles.input}
         placeholder="Nombre del producto"
         value={nuevoProducto.nombre}
         onChangeText={(nombre) => manejoCambio("nombre", nombre)}
       />
+
       <TextInput
         style={styles.input}
         placeholder="Precio"
@@ -23,7 +29,12 @@ const FormularioProductos = ({
         onChangeText={(precio) => manejoCambio("precio", precio)}
         keyboardType="numeric"
       />
-      <Button title="Guardar" onPress={guardarProducto} />
+
+      <Button
+        title={modoEdicion ? "Actualizar" : "Guardar"}
+        onPress={modoEdicion ? actualizarProducto : guardarProducto}
+      />
+
     </View>
   );
 };
