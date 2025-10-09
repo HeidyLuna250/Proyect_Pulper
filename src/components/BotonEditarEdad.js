@@ -72,7 +72,7 @@ const BotonEditarEdad = ({ id, nombreInicial, edadInicial, cargarDatos }) => {
 const styles = StyleSheet.create({
   boton: {
     padding: 6,
-    backgroundColor: "#64b5f6",
+    backgroundColor: "#99c99aff",
     borderRadius: 5,
     marginHorizontal: 5,
   },

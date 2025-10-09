@@ -23,7 +23,7 @@ const BotonEliminarEdad = ({ id, eliminarEdad }) => {
 const styles = StyleSheet.create({
   boton: {
     padding: 6,
-    backgroundColor: "#e57373",
+    backgroundColor: "#f19090ff",
     borderRadius: 5,
     marginHorizontal: 5,
   },

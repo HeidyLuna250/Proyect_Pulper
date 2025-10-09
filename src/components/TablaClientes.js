@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   encabezado: {
-    backgroundColor: '#f0f0f0'
+    backgroundColor: '#dcedf3ff'
   },
   celda: {
     flex: 1,

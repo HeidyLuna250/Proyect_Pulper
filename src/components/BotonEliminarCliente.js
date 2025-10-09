@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    backgroundColor: '#f3f3f7ff'
+    backgroundColor: '#f19090ff'
   },
   textoBoton: {
     color: 'white',
