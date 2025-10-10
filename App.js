@@ -4,6 +4,7 @@ import Productos from "./src/views/Productos";
 import Clientes from "./src/views/Clientes";
 import Promedios from "./src/views/Promedios";
 import Encabezado from "./src/components/Encabezado";
+import Usuarios from "./src/views/Usuarios";
 
 export default function App() {
   const [pantalla, setPantalla] = useState("productos");
@@ -16,6 +17,8 @@ export default function App() {
         return <Clientes />;
       case "promedios":
         return <Promedios />;
+      case "usuarios":
+        return <Usuarios />;
       default:
         return <Productos />;
     }
@@ -30,7 +33,9 @@ export default function App() {
             ? "Gestión de Productos"
             : pantalla === "clientes"
             ? "Gestión de Clientes"
-            : "Promedios"
+            : pantalla === "usuarios"
+            ? "Gestión de Usuarios"
+            : "Promedios"     
         }
       />
 
@@ -55,6 +60,13 @@ export default function App() {
           onPress={() => setPantalla("promedios")}
         >
           <Text style={styles.textoBoton}>Promedios</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.boton, pantalla === "usuarios" && styles.activo]}
+          onPress={() => setPantalla("usuarios")}
+        >
+          <Text style={styles.textoBoton}>Usuarios</Text>
         </TouchableOpacity>
       </View>
 
