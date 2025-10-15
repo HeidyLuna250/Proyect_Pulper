@@ -1,54 +1,39 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, TextInput, Button, StyleSheet, Text } from "react-native";
-import { Picker } from "@react-native-picker/picker"; // 👈 Asegúrate de tener este paquete
-import { db } from "../database/firebaseconfig";
-import { collection, addDoc } from "firebase/firestore";
+import { Picker } from "@react-native-picker/picker";
 
-const FormularioClientes = ({ cargarDatos }) => {
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [sexo, setSexo] = useState(""); // M o F
-
-  const guardarCliente = async () => {
-    if (nombre && apellido && sexo) {
-      try {
-        await addDoc(collection(db, "Clientes"), { nombre, apellido, sexo });
-        setNombre("");
-        setApellido("");
-        setSexo("");
-        cargarDatos(); // recarga la lista
-      } catch (error) {
-        console.error("Error al registrar cliente: ", error);
-      }
-    } else {
-      alert("Por favor, complete todos los campos.");
-    }
-  };
-
+const FormularioClientes = ({
+  nuevoCliente,
+  manejoCambio,
+  guardarCliente,
+  actualizarCliente,
+  modoEdicion,
+}) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Registro de Clientes</Text>
+      <Text style={styles.titulo}>
+        {modoEdicion ? "Actualizar Cliente" : "Registro de Clientes"}
+      </Text>
 
       <TextInput
         style={styles.input}
         placeholder="Nombre"
-        value={nombre}
-        onChangeText={setNombre}
+        value={nuevoCliente.nombre}
+        onChangeText={(valor) => manejoCambio("nombre", valor)}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Apellido"
-        value={apellido}
-        onChangeText={setApellido}
+        value={nuevoCliente.apellido}
+        onChangeText={(valor) => manejoCambio("apellido", valor)}
       />
 
-      {/* Selector de sexo */}
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>Sexo:</Text>
         <Picker
-          selectedValue={sexo}
-          onValueChange={(value) => setSexo(value)}
+          selectedValue={nuevoCliente.sexo}
+          onValueChange={(valor) => manejoCambio("sexo", valor)}
           style={styles.picker}
         >
           <Picker.Item label="Seleccione..." value="" />
@@ -57,7 +42,10 @@ const FormularioClientes = ({ cargarDatos }) => {
         </Picker>
       </View>
 
-      <Button title="Guardar" onPress={guardarCliente} />
+      <Button
+        title={modoEdicion ? "Actualizar" : "Guardar"}
+        onPress={modoEdicion ? actualizarCliente : guardarCliente}
+      />
     </View>
   );
 };

@@ -1,8 +1,8 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import BotonEliminarCliente from "./BotonEliminarCliente";
 
-const TablaClientes = ({ clientes, eliminarCliente }) => {
+const TablaClientes = ({ clientes, eliminarCliente, editarCliente }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Tabla de Clientes</Text>
@@ -23,52 +23,66 @@ const TablaClientes = ({ clientes, eliminarCliente }) => {
             <Text style={styles.celda}>{item.apellido}</Text>
             <Text style={styles.celda}>{item.sexo}</Text>
             <View style={styles.celdaAcciones}>
+              <TouchableOpacity
+                style={styles.botonActualizar}
+                onPress={() => editarCliente(item)}
+              >
+                <Text>✏️</Text>
+              </TouchableOpacity>
               <BotonEliminarCliente id={item.id} eliminarCliente={eliminarCliente} />
             </View>
           </View>
         ))}
       </ScrollView>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    alignSelf: "stretch"
+    alignSelf: "stretch",
   },
   titulo: {
     fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 10
+    marginBottom: 10,
   },
   fila: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderBottomWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     paddingVertical: 6,
-    alignItems: 'center'
+    alignItems: "center",
   },
   encabezado: {
-    backgroundColor: '#dcedf3ff'
+    backgroundColor: "#dcedf3ff",
   },
   celda: {
     flex: 1,
     fontSize: 16,
-    textAlign: 'center'
+    textAlign: "center",
   },
   celdaAcciones: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 8
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 8,
   },
   textoEncabezado: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 17,
-    textAlign: 'center'
+    textAlign: "center",
+  },
+  botonActualizar: {
+    padding: 4,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    backgroundColor: "#99c99aff",
   },
 });
 

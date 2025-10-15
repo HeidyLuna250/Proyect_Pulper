@@ -1,47 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, TextInput, Button, StyleSheet, Text, Alert } from "react-native";
-import { db } from "../database/firebaseconfig";
-import { collection, addDoc } from "firebase/firestore";
 
-const FormularioEdades = ({ cargarDatos }) => {
-  const [nombre, setNombre] = useState("");
-  const [edad, setEdad] = useState("");
-
-  const guardarEdad = async () => {
-    if (nombre.trim() && edad.trim()) {
-      try {
-        await addDoc(collection(db, "edades"), { 
-          nombre: nombre.trim(),
-          edad: parseInt(edad),
-        });
-        setNombre("");
-        setEdad("");
-        cargarDatos();
-      } catch (error) {
-        console.error("Error al guardar la edad: ", error);
-      }
-    } else {
-      Alert.alert("Por favor, complete todos los campos.");
-    }
-  };
-
+const FormularioEdades = ({
+  nuevaEdad,
+  manejoCambio,
+  guardarEdad,
+  actualizarEdad,
+  modoEdicion,
+}) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Registro de Edades</Text>
+      <Text style={styles.titulo}>
+        {modoEdicion ? "Actualizar Edad" : "Registro de Edades"}
+      </Text>
       <TextInput
         style={styles.input}
         placeholder="Nombre"
-        value={nombre}
-        onChangeText={setNombre}
+        value={nuevaEdad.nombre}
+        onChangeText={(valor) => manejoCambio("nombre", valor)}
       />
       <TextInput
         style={styles.input}
         placeholder="Edad"
-        value={edad}
-        onChangeText={setEdad}
+        value={nuevaEdad.edad}
+        onChangeText={(valor) => manejoCambio("edad", valor)}
         keyboardType="numeric"
       />
-      <Button title="Guardar" onPress={guardarEdad} />
+      <Button
+        title={modoEdicion ? "Actualizar" : "Guardar"}
+        onPress={modoEdicion ? actualizarEdad : guardarEdad}
+      />
     </View>
   );
 };

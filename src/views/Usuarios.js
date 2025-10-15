@@ -1,12 +1,12 @@
-import React, { useState, useEffect, act } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Alert, Button } from 'react-native';
 import { collection, getDocs, deleteDoc, doc, addDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../database/firebaseconfig.js';
 import FormularioUsuarios from '../components/FormularioUsuarios.js';
 import ListaUsuarios from '../components/ListaUsuarios.js';
 import TablaUsuarios from '../components/TablaUsuarios.js';
 
-const Usuarios = () => {
+const Usuarios = ({ cerrarSesion }) => {
   const [usuarios, setUsuarios] = useState([]);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [usuarioId, setUsuarioId] = useState(null);
@@ -31,7 +31,7 @@ const Usuarios = () => {
   };
 
   const eliminarUsuario = async (id) => {
-    try{
+    try {
       await deleteDoc(doc(db, "Usuarios", id));
       cargarDatos();
     } catch (error) {
@@ -48,7 +48,7 @@ const Usuarios = () => {
 
   const guardarUsuario = async () => {
     const datosValidados = await validarDatos(nuevoUsuario);
-    if(datosValidados) {
+    if (datosValidados) {
       try {
         await addDoc(collection(db, "Usuarios"), {
           nombre: datosValidados.nombre,
@@ -57,7 +57,7 @@ const Usuarios = () => {
           edad: parseInt(datosValidados.edad),
         });
         cargarDatos();
-        setNuevoUsuario({nombre: "", correo: "", telefono: "", edad: "",})
+        setNuevoUsuario({ nombre: "", correo: "", telefono: "", edad: "" });
         Alert.alert("Éxito", "Usuario registrado correctamente.");
       } catch (error) {
         console.error("Error al registrar usuario:", error);
@@ -75,13 +75,13 @@ const Usuarios = () => {
           telefono: parseInt(datosValidados.telefono),
           edad: parseInt(datosValidados.edad),
         });
-        setNuevoUsuario({nombre: "", correo: "", telefono:"", edad: ""});
-        setModoEdicion(false); //Volver al modo registro
+        setNuevoUsuario({ nombre: "", correo: "", telefono: "", edad: "" });
+        setModoEdicion(false);
         setUsuarioId(null);
-        cargarDatos(); //Recargar Lista
+        cargarDatos();
         Alert.alert("Éxito", "Usuario actualizado correctamente.");
       } catch (error) {
-        console.error ("Error al actualizar usuario:", error);
+        console.error("Error al actualizar usuario:", error);
       }
     }
   };
@@ -94,11 +94,11 @@ const Usuarios = () => {
       edad: usuario.edad.toString(),
     });
     setUsuarioId(usuario.id);
-    setModoEdicion(true)
+    setModoEdicion(true);
   };
 
   const validarDatos = async (datos) => {
-    try{
+    try {
       const response = await fetch("https://zntx5r359a.execute-api.us-east-2.amazonaws.com/validarusuario", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -107,8 +107,8 @@ const Usuarios = () => {
 
       const resultado = await response.json();
 
-      if(resultado.success) {
-        return resultado.data; //Datos limpios y validados
+      if (resultado.success) {
+        return resultado.data;
       } else {
         Alert.alert("Errores en los datos", resultado.errors.join("\n"));
         return null;
@@ -133,13 +133,13 @@ const Usuarios = () => {
         actualizarUsuario={actualizarUsuario}
         modoEdicion={modoEdicion}
       />
-
-      <ListaUsuarios usuarios={usuarios}/>
+      <ListaUsuarios usuarios={usuarios} />
       <TablaUsuarios
         usuarios={usuarios}
         editarUsuario={editarUsuario}
         eliminarUsuario={eliminarUsuario}
       />
+      <Button title="Cerrar Sesión" onPress={cerrarSesion} />
     </View>
   );
 };

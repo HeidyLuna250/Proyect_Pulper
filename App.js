@@ -1,18 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Productos from "./src/views/Productos";
 import Clientes from "./src/views/Clientes";
 import Promedios from "./src/views/Promedios";
-import Encabezado from "./src/components/Encabezado";
 import Usuarios from "./src/views/Usuarios";
+import Encabezado from "./src/components/Encabezado";
+import Login from "./src/views/Login";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "./src/database/firebaseconfig";
 
 export default function App() {
+  const [usuario, setUsuario] = useState(null); // Estado inicial null
   const [pantalla, setPantalla] = useState("productos");
 
+  // Monitorear estado de autenticación
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUsuario(user);
+    });
+    return unsubscribe;
+  }, []);
+
+  // Función para cerrar sesión
+  const cerrarSesion = async () => {
+    try {
+      await signOut(auth);
+      setUsuario(null);
+    } catch (error) {
+      console.error("Error al cerrar sesión: ", error);
+    }
+  };
+
+  // Mostrar pantalla de login si no hay usuario autenticado
+  if (!usuario) {
+    return <Login onLoginSuccess={() => setUsuario(auth.currentUser)} />;
+  }
+
+  // Renderizar pantallas según el estado
   const renderPantalla = () => {
     switch (pantalla) {
       case "productos":
-        return <Productos />;
+        return <Productos cerrarSesion={cerrarSesion} />;
       case "clientes":
         return <Clientes />;
       case "promedios":
@@ -20,7 +48,7 @@ export default function App() {
       case "usuarios":
         return <Usuarios />;
       default:
-        return <Productos />;
+        return <Productos cerrarSesion={cerrarSesion} />;
     }
   };
 
@@ -33,9 +61,9 @@ export default function App() {
             ? "Gestión de Productos"
             : pantalla === "clientes"
             ? "Gestión de Clientes"
-            : pantalla === "usuarios"
-            ? "Gestión de Usuarios"
-            : "Promedios"     
+            : pantalla === "promedios"
+            ? "Promedios"
+            : "Gestión de Usuarios"
         }
       />
 
