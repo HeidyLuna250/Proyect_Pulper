@@ -5,6 +5,9 @@ import { db } from '../database/firebaseconfig.js';
 import FormularioUsuarios from '../components/FormularioUsuarios.js';
 import ListaUsuarios from '../components/ListaUsuarios.js';
 import TablaUsuarios from '../components/TablaUsuarios.js';
+import * as FileSystem from "expo-file-system/legacy";
+import * as Sharing from "expo-sharing";
+import * as Clipboard from "expo-clipboard";
 
 const Usuarios = ({ cerrarSesion }) => {
   const [usuarios, setUsuarios] = useState([]);
