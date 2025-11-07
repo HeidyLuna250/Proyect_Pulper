@@ -96,7 +96,64 @@ const Clientes = ({ cerrarSesion }) => {
       alert("Error al exportar y compartir: " + error.message);
     }
   };
-  
+
+  // Función para convertir ArrayBuffer a base64:
+const arrayBufferToBase64 = (buffer) => {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+};
+
+// Implementar su API para generar Excel de Clientes
+const generarExcelClientes = async () => {
+  try {
+    const datosParaExcel = [
+      { nombre: "Alexander", apellido: "Pérez", sexo: "Masculino" },
+      { nombre: "Lujania", apellido: "Leiva", sexo: "Femenino" },
+      { nombre: "Alejandro", apellido: "Garcia", sexo: "Masculino" }
+    ];
+
+    const response = await fetch("https://j8w86lcg4c.execute-api.us-east-2.amazonaws.com/generarexcel", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ datos: datosParaExcel })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    // Obtención de ArrayBuffer y conversión a base64
+    const arrayBuffer = await response.arrayBuffer();
+    const base64 = arrayBufferToBase64(arrayBuffer);
+
+    // Ruta para guardar el archivo temporalmente
+    const fileUri = FileSystem.documentDirectory + "clientes.xlsx";
+
+    // Escribir el archivo Excel en el sistema de archivos
+    await FileSystem.writeAsStringAsync(fileUri, base64, {
+      encoding: FileSystem.EncodingType.Base64
+    });
+
+    // Compartir el archivo generado
+    if (await Sharing.isAvailableAsync()) {
+      await Sharing.shareAsync(fileUri, {
+        mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        dialogTitle: 'Descargar Reporte Excel de Clientes'
+      });
+    } else {
+      alert("Compartir no disponible. Revisa la consola para logs.");
+    }
+
+  } catch (error) {
+    console.error("Error generando Excel:", error);
+    alert("Error: " + error.message);
+  }
+};
 
   // Eliminar cliente
   const eliminarCliente = async (id) => {
@@ -175,6 +232,9 @@ const Clientes = ({ cerrarSesion }) => {
     <View style={styles.container}>
       <View style={{ marginVertical: 10 }}>
         <Button title="Exportar" onPress={exportarDatos} />
+      </View>
+    <View style={{ marginVertical: 10 }}>
+        <Button title="Generar Excel" onPress={generarExcelClientes} />
       </View>
       <FormularioClientes
         nuevoCliente={nuevoCliente}
