@@ -4,13 +4,16 @@ import Productos from "./src/views/Productos";
 import Clientes from "./src/views/Clientes";
 import Promedios from "./src/views/Promedios";
 import Usuarios from "./src/views/Usuarios";
-import Encabezado from "./src/components/Encabezado";
+import ProductosRealtime from "./src/views/ProductosRealtime";
 import Login from "./src/views/Login";
+
+import Encabezado from "./src/components/Encabezado";
+
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./src/database/firebaseconfig";
 
 export default function App() {
-  const [usuario, setUsuario] = useState(null); // Estado inicial null
+  const [usuario, setUsuario] = useState(null); 
   const [pantalla, setPantalla] = useState("productos");
 
   // Monitorear estado de autenticación
@@ -47,6 +50,8 @@ export default function App() {
         return <Promedios />;
       case "usuarios":
         return <Usuarios />;
+      case "productosRealtime": 
+        return <ProductosRealtime />;
       default:
         return <Productos cerrarSesion={cerrarSesion} />;
     }
@@ -63,7 +68,9 @@ export default function App() {
             ? "Gestión de Clientes"
             : pantalla === "promedios"
             ? "Promedios"
-            : "Gestión de Usuarios"
+            : pantalla === "usuarios"
+            ? "Gestión de Usuarios"
+            : "Productos Realtime"
         }
       />
 
@@ -95,6 +102,13 @@ export default function App() {
           onPress={() => setPantalla("usuarios")}
         >
           <Text style={styles.textoBoton}>Usuarios</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.boton, pantalla === "productosRealtime" && styles.activo]}
+          onPress={() => setPantalla("productosRealtime")}
+        >
+          <Text style={styles.textoBoton}>Realtime</Text>
         </TouchableOpacity>
       </View>
 
