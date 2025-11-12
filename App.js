@@ -6,6 +6,7 @@ import Promedios from "./src/views/Promedios";
 import Usuarios from "./src/views/Usuarios";
 import ProductosRealtime from "./src/views/ProductosRealtime";
 import Login from "./src/views/Login";
+import IMCRealtime from "./src/views/IMCRealtime";
 
 import Encabezado from "./src/components/Encabezado";
 
@@ -52,6 +53,8 @@ export default function App() {
         return <Usuarios />;
       case "productosRealtime": 
         return <ProductosRealtime />;
+      case "imcRealtime":
+        return <IMCRealtime />;
       default:
         return <Productos cerrarSesion={cerrarSesion} />;
     }
@@ -70,6 +73,8 @@ export default function App() {
             ? "Promedios"
             : pantalla === "usuarios"
             ? "Gestión de Usuarios"
+            : pantalla === "imcRealtime"
+            ? "Cálculo de IMC"
             : "Productos Realtime"
         }
       />
@@ -109,6 +114,13 @@ export default function App() {
           onPress={() => setPantalla("productosRealtime")}
         >
           <Text style={styles.textoBoton}>Realtime</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.boton, pantalla === "imcRealtime" && styles.activo]}
+          onPress={() => setPantalla("imcRealtime")}
+        >
+          <Text style={styles.textoBoton}>IMC</Text>
         </TouchableOpacity>
       </View>
 
